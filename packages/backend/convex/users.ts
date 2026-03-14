@@ -17,6 +17,14 @@ export const add = mutation({
     if (identity === null) {
       throw new Error("Not authenticated");
     }
+
+    const orgId = identity?.orgId as string;
+
+    if (!orgId) {
+      throw new Error("Missing orgainization");
+    }
+
+    throw new Error("tracking error test");
     const userId = await ctx.db.insert("users", {
       name: "Aluru Murali Krishna",
     });
