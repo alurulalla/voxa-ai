@@ -18,9 +18,9 @@ export default function Page() {
       <Button onClick={() => endCall()} variant="destructive">
         End Call
       </Button>
-      <p>isConnected: {isConnected}</p>
-      <p>isConnecting: {isConnecting}</p>
-      <p>isSpeaking: {isSpeaking}</p>
+      <p>isConnected: {`${isConnected}`}</p>
+      <p>isConnecting: {`${isConnecting}`}</p>
+      <p>isSpeaking: {`${isSpeaking}`}</p>
       <p>{JSON.stringify(transcript, null, 2)}</p>
     </div>
   );

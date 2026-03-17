@@ -1,6 +1,9 @@
 import { AuthGuard } from "@/modules/auth/ui/components/auth-guard";
 import { OrganizationGuard } from "@/modules/auth/ui/components/organization-guard";
-import { SidebarProvider } from "@workspace/ui/components/sidebar";
+import {
+  SIDEBAR_COOKIE_NAME,
+  SidebarProvider,
+} from "@workspace/ui/components/sidebar";
 import { cookies } from "next/headers";
 import React from "react";
 import { DashboardSidebar } from "../components/dashboard-sidebar";
@@ -11,8 +14,7 @@ export const DashboardLayout = async ({
   children: React.ReactNode;
 }) => {
   const cookieStore = await cookies();
-  const sidebarCookie = cookieStore.get("sidebar_state")?.value;
-  console.log("sidebarCooke", sidebarCookie);
+  const sidebarCookie = cookieStore.get(SIDEBAR_COOKIE_NAME)?.value;
   const defaultOpen = sidebarCookie ? sidebarCookie === "true" : true;
   return (
     <AuthGuard>
