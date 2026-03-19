@@ -15,7 +15,12 @@ import {
   ArrowUpIcon,
   CheckIcon,
   CornerUpLeftIcon,
-  ListIcon,
+  FilterIcon,
+  MailQuestionIcon,
+  AlertTriangleIcon,
+  CheckCircleIcon,
+  UsersIcon,
+  ClockIcon,
 } from "lucide-react";
 import {
   getCountriesFromTimezone,
@@ -73,31 +78,31 @@ export const ConversationsPanel = () => {
           }
           value={statusFilter}
         >
-          <SelectTrigger className="h-8 border-none px-1.5 shadow-none ring-0 hover:bg-accent hover:text-accent-foreground focus-visible:ring-0">
+          <SelectTrigger className="h-8 border-none px-1.5 shadow-none ring-0 hover:bg-teal-50 dark:hover:bg-teal-950/30 hover:text-teal-600 dark:hover:text-teal-400 focus-visible:ring-0">
             <SelectValue placeholder="Filter" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">
               <div className="flex items-center gap-2">
-                <ListIcon className="size-4" />
-                <span>All</span>
+                <FilterIcon className="size-4 text-teal-600 dark:text-teal-400" />
+                <span>All Conversations</span>
               </div>
             </SelectItem>
             <SelectItem value="unresolved">
               <div className="flex items-center gap-2">
-                <ArrowRightIcon className="size-4" />
+                <MailQuestionIcon className="size-4 text-amber-600 dark:text-amber-400" />
                 <span>Unresolved</span>
               </div>
             </SelectItem>
             <SelectItem value="escalated">
               <div className="flex items-center gap-2">
-                <ArrowUpIcon className="size-4" />
+                <AlertTriangleIcon className="size-4 text-orange-600 dark:text-orange-400" />
                 <span>Escalated</span>
               </div>
             </SelectItem>
             <SelectItem value="resolved">
               <div className="flex items-center gap-2">
-                <CheckIcon className="size-4" />
+                <CheckCircleIcon className="size-4 text-teal-600 dark:text-teal-400" />
                 <span>Resolved</span>
               </div>
             </SelectItem>
@@ -109,71 +114,84 @@ export const ConversationsPanel = () => {
       ) : (
         <ScrollArea className="max-h-[calc(100vh-53px)]">
           <div className="flex w-full flex-1 flex-col text-sm">
-            {conversations.results.map((conversation) => {
-              const isLastMessageFromOperator =
-                conversation.lastMessage?.message?.role !== "user";
+            {conversations.results.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+                <UsersIcon className="h-12 w-12 text-teal-200 dark:text-teal-800 mb-3" />
+                <h3 className="font-medium text-lg">No conversations yet</h3>
+                <p className="text-muted-foreground text-sm mt-1">
+                  When customers start chatting, they'll appear here
+                </p>
+              </div>
+            ) : (
+              conversations.results.map((conversation) => {
+                const isLastMessageFromOperator =
+                  conversation.lastMessage?.message?.role !== "user";
 
-              const country = getCountriesFromTimezone(
-                conversation.contactSession.metadata?.timezone,
-              );
+                const country = getCountriesFromTimezone(
+                  conversation.contactSession.metadata?.timezone,
+                );
 
-              const countryFlagUrl = country?.code
-                ? getCountryFlagUrl(country.code)
-                : undefined;
+                const countryFlagUrl = country?.code
+                  ? getCountryFlagUrl(country.code)
+                  : undefined;
 
-              return (
-                <Link
-                  key={conversation._id}
-                  href={`/conversations/${conversation._id}`}
-                  className={cn(
-                    "relative flex cursor-pointer items-start gap-3 border-b p-4 py-5 text-sm leading-tight hover:bg-accent hover:text-accent-foreground",
-                    pathName === `/conversations/${conversation._id}` &&
-                      "bg-accent text-accent-foreground",
-                  )}
-                >
-                  <div
+                return (
+                  <Link
+                    key={conversation._id}
+                    href={`/conversations/${conversation._id}`}
                     className={cn(
-                      "-translate-y-1/2 absolute top-1/2 left-0 h-[64%] w-1 rounded-r-full bg-neutral-300 opacity-0 transition-opacity",
+                      "relative flex cursor-pointer items-start gap-3 border-b p-4 py-5 text-sm leading-tight transition-all duration-200",
+                      "hover:bg-gradient-to-r hover:from-teal-50/50 hover:to-white dark:hover:from-teal-950/20 dark:hover:to-transparent",
                       pathName === `/conversations/${conversation._id}` &&
-                        "opacity-100",
+                        "bg-gradient-to-r from-teal-50 to-white dark:from-teal-950/30 dark:to-transparent border-l-2 border-l-teal-500",
                     )}
-                  />
-                  <DicebearAvatar
-                    seed={conversation.contactSession._id}
-                    badgeImageUrl={countryFlagUrl}
-                    size={40}
-                    className="shrink-0"
-                  />
-                  <div className="flex-1">
-                    <div className="flex w-full items-center gap-2">
-                      <span className="truncate font-bold">
-                        {conversation.contactSession.name}
-                      </span>
-                      <span className="ml-auto shrink-0 text-muted-foreground text-xs">
-                        {formatDistanceToNow(conversation._creationTime)}
-                      </span>
-                    </div>
-                    <div className="mt-1 flex items-center justify-between gap-2">
-                      <div className="flex w-0 grow items-center gap-1">
-                        {isLastMessageFromOperator && (
-                          <CornerUpLeftIcon className="size-3 shrink-0 text-muted-foreground" />
-                        )}
-                        <span
-                          className={cn(
-                            "line-clamp-1 text-muted-foreground text-xs",
-                            !isLastMessageFromOperator &&
-                              "font-bold text-black",
-                          )}
-                        >
-                          {conversation.lastMessage?.text}
+                  >
+                    <div
+                      className={cn(
+                        "-translate-y-1/2 absolute top-1/2 left-0 h-[64%] w-1 rounded-r-full bg-teal-500 opacity-0 transition-opacity",
+                        pathName === `/conversations/${conversation._id}` &&
+                          "opacity-100",
+                      )}
+                    />
+                    <DicebearAvatar
+                      seed={conversation.contactSession._id}
+                      //badgeImageUrl={countryFlagUrl}
+                      size={40}
+                      className="shrink-0 ring-2 ring-transparent transition-all duration-200 group-hover:ring-teal-400 dark:group-hover:ring-teal-500 group-hover:ring-offset-2 ring-offset-background font-medium"
+                    />
+                    <div className="flex-1">
+                      <div className="flex w-full items-center gap-2">
+                        <span className="truncate font-medium group-hover:text-teal-700 dark:group-hover:text-teal-300">
+                          {conversation.contactSession.name}
+                        </span>
+                        <span className="ml-auto shrink-0 flex items-center gap-1 text-muted-foreground text-xs">
+                          <ClockIcon className="size-3" />
+                          {formatDistanceToNow(conversation._creationTime)}
                         </span>
                       </div>
-                      <ConversationStatusIcon status={conversation.status} />
+                      <div className="mt-1 flex items-center justify-between gap-2">
+                        <div className="flex w-0 grow items-center gap-1">
+                          {isLastMessageFromOperator && (
+                            <CornerUpLeftIcon className="size-3 shrink-0 text-teal-500" />
+                          )}
+                          <span
+                            className={cn(
+                              "line-clamp-1 text-muted-foreground text-xs",
+                              !isLastMessageFromOperator &&
+                                "font-medium text-foreground",
+                            )}
+                          >
+                            {conversation.lastMessage?.text ||
+                              "No messages yet"}
+                          </span>
+                        </div>
+                        <ConversationStatusIcon status={conversation.status} />
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              );
-            })}
+                  </Link>
+                );
+              })
+            )}
             <InfiniteScrollTrigger
               canLoadMore={canLoadMore}
               isLoadingMore={isLoadingMore}

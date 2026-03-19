@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@workspace/ui/components/button";
 import { WidgetHeader } from "../components/widget-header";
-import { ArrowLeftIcon, MenuIcon } from "lucide-react";
+import { ArrowLeftIcon, MenuIcon, BotIcon } from "lucide-react";
 import { useAtomValue, useSetAtom } from "jotai";
 import {
   contactSessionIdAtomFamily,
@@ -13,7 +13,7 @@ import { useAction, useQuery } from "convex/react";
 import { api } from "@workspace/backend/_generated/api";
 import { toUIMessages, useThreadMessages } from "@convex-dev/agent/react";
 import z from "zod";
-import { Controller, Form, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   AIConversation,
@@ -35,6 +35,7 @@ import { AIResponse } from "@workspace/ui/components/ai/response";
 import { useInfiniteScroll } from "@workspace/ui/hooks/use-infinite-scroll";
 import { InfiniteScrollTrigger } from "@workspace/ui/components/infinite-scroll-trigger";
 import { DicebearAvatar } from "@workspace/ui/components/dicebear-avatar";
+import { cn } from "@workspace/ui/lib/utils";
 
 const formSchema = z.object({
   message: z.string().min(1, "Message is required"),
@@ -102,20 +103,43 @@ export const WidgetChatScreen = () => {
     setConversationId(null);
     setScreen("inbox");
   };
+
   return (
     <>
-      <WidgetHeader className="flex items-center justify-between">
-        <div className="flex items-center gap-x-2">
-          <Button size="icon" variant="transparent" onClick={onBack}>
-            <ArrowLeftIcon />
+      <WidgetHeader>
+        <div className="flex items-center justify-between w-full">
+          <div className="flex items-center gap-x-2">
+            <Button
+              size="icon"
+              variant="transparent"
+              onClick={onBack}
+              className="hover:bg-white/20 text-white"
+            >
+              <ArrowLeftIcon className="size-4" />
+            </Button>
+            <div className="flex items-center gap-2">
+              <div className="rounded-full bg-white/20 p-1 backdrop-blur-sm">
+                <BotIcon className="size-4 text-white" />
+              </div>
+              <div className="flex flex-col">
+                <p className="font-medium text-white text-sm">
+                  Chat with Voxa AI
+                </p>
+                <p className="text-xs text-white/70">Online</p>
+              </div>
+            </div>
+          </div>
+          <Button
+            size="icon"
+            variant="transparent"
+            className="hover:bg-white/20 text-white"
+          >
+            <MenuIcon className="size-4" />
           </Button>
-          <p>Chat</p>
         </div>
-        <Button size="icon" variant="transparent">
-          <MenuIcon />
-        </Button>
       </WidgetHeader>
-      <AIConversation>
+
+      <AIConversation className="bg-muted/30">
         <AIConversationContent>
           <InfiniteScrollTrigger
             canLoadMore={canLoadMore}
@@ -132,25 +156,35 @@ export const WidgetChatScreen = () => {
                 <AIMessageContent>
                   <AIResponse>{message.content}</AIResponse>
                 </AIMessageContent>
-                {message.role === "assistant" && (
+                {message.role === "assistant" ? (
+                  <div className="relative">
+                    <div className="absolute -inset-1 rounded-full bg-teal-500/20 blur-sm" />
+                    <DicebearAvatar
+                      imageUrl="/logo.svg"
+                      seed="assistant"
+                      size={32}
+                      className="relative ring-2 ring-teal-500/30"
+                    />
+                  </div>
+                ) : (
                   <DicebearAvatar
-                    imageUrl="/logo.svg"
-                    seed="assistant"
+                    seed={contactSessionId || "user"}
                     size={32}
+                    className="ring-2 ring-transparent"
                   />
                 )}
               </AIMessage>
             );
           })}
+          <AIConversationScrollButton />
         </AIConversationContent>
       </AIConversation>
-      {/* <Form {...form}> */}
+
       <AIInput
-        className="rounded-none border-x-0"
+        className="rounded-none border-x-0 border-t bg-background p-3"
         onSubmit={form.handleSubmit(onSubmit)}
         {...form}
       >
-        {/* <FieldGroup> */}
         <Controller
           control={form.control}
           disabled={conversation?.status === "resolved"}
@@ -171,10 +205,14 @@ export const WidgetChatScreen = () => {
                   : "Type your message..."
               }
               value={field.value}
+              className={cn(
+                "focus-visible:ring-teal-500 rounded-lg",
+                conversation?.status === "resolved" && "opacity-60",
+              )}
             />
           )}
         />
-        <AIInputToolbar>
+        <AIInputToolbar className="mt-2">
           <AIInputTools />
           <AIInputSubmit
             disabled={
@@ -182,11 +220,10 @@ export const WidgetChatScreen = () => {
             }
             status="ready"
             type="submit"
+            className="bg-teal-500 hover:bg-teal-600 text-white disabled:bg-teal-300 dark:disabled:bg-teal-800"
           />
         </AIInputToolbar>
-        {/* </FieldGroup> */}
       </AIInput>
-      {/* </Form> */}
     </>
   );
 };

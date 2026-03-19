@@ -19,6 +19,7 @@ import {
   organizationIdAtom,
   screenAtom,
 } from "../../atoms/widget-atoms";
+import { SparklesIcon, UserIcon, MailIcon, ArrowRightIcon } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -72,9 +73,18 @@ export const WidgetAuthScreen = () => {
   return (
     <>
       <WidgetHeader>
-        <div className="flex flex-col justify-between gap-y-2 px-2 py-6">
-          <p className="font-semibold text-3xl">Hi there!</p>
-          <p className="text-lg">Let&apos;s get you started</p>
+        <div className="flex flex-col justify-between gap-y-3 px-2 py-6">
+          <div className="flex items-center gap-3">
+            <div className="rounded-full bg-white/20 p-2 backdrop-blur-sm">
+              <SparklesIcon className="size-6 text-white" />
+            </div>
+            <p className="font-bold text-2xl text-white drop-shadow-md sm:text-3xl">
+              Chat with Voxa AI
+            </p>
+          </div>
+          <p className="text-base text-white/90 sm:text-lg">
+            Welcome! Please introduce yourself to get started
+          </p>
         </div>
       </WidgetHeader>
       <form
@@ -87,13 +97,16 @@ export const WidgetAuthScreen = () => {
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <Input
-                  {...field}
-                  placeholder="e.g. John Doe"
-                  autoComplete="off"
-                  type="text"
-                  className="h-10 bg-background"
-                />
+                <div className="relative">
+                  <UserIcon className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    {...field}
+                    placeholder="e.g. John Doe"
+                    autoComplete="off"
+                    type="text"
+                    className="h-10 bg-background pl-9 focus-visible:ring-teal-500"
+                  />
+                </div>
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}
@@ -105,13 +118,16 @@ export const WidgetAuthScreen = () => {
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <Input
-                  {...field}
-                  placeholder="e.g. john.doe@example.com"
-                  autoComplete="off"
-                  type="eamil"
-                  className="h-10 bg-background"
-                />
+                <div className="relative">
+                  <MailIcon className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    {...field}
+                    placeholder="e.g. john.doe@example.com"
+                    autoComplete="off"
+                    type="email"
+                    className="h-10 bg-background pl-9 focus-visible:ring-teal-500"
+                  />
+                </div>
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}
@@ -120,8 +136,20 @@ export const WidgetAuthScreen = () => {
           />
         </FieldGroup>
 
-        <Button disabled={form.formState.isSubmitting} size="lg" type="submit">
-          Continue
+        <Button
+          disabled={form.formState.isSubmitting}
+          size="lg"
+          type="submit"
+          className="bg-teal-500 hover:bg-teal-600 text-white disabled:bg-teal-300 dark:disabled:bg-teal-800"
+        >
+          {form.formState.isSubmitting ? (
+            "Starting chat..."
+          ) : (
+            <>
+              Continue
+              <ArrowRightIcon className="size-4 ml-2" />
+            </>
+          )}
         </Button>
       </form>
     </>

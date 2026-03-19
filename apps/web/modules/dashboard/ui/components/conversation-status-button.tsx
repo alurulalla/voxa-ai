@@ -1,7 +1,12 @@
 import { Hint } from "@workspace/ui/components/hint";
 import { Doc } from "@workspace/backend/_generated/dataModel";
 import { Button } from "@workspace/ui/components/button";
-import { ArrowRightIcon, ArrowUpIcon, CheckIcon } from "lucide-react";
+import {
+  CheckCircleIcon,
+  AlertTriangleIcon,
+  MailQuestionIcon,
+  ArrowRightIcon,
+} from "lucide-react";
 
 export const ConversationStatusButton = ({
   status,
@@ -19,9 +24,10 @@ export const ConversationStatusButton = ({
           disabled={disabled}
           onClick={onClick}
           size="sm"
-          variant="default"
+          variant="outline"
+          className="border-teal-500 bg-teal-500 text-white hover:bg-teal-600 hover:text-white dark:border-teal-600 dark:bg-teal-600 dark:hover:bg-teal-700"
         >
-          <CheckIcon />
+          <CheckCircleIcon className="size-4" />
           Resolved
         </Button>
       </Hint>
@@ -35,9 +41,10 @@ export const ConversationStatusButton = ({
           disabled={disabled}
           onClick={onClick}
           size="sm"
-          variant="secondary"
+          variant="outline"
+          className="border-orange-500 bg-orange-500 text-white hover:bg-orange-600 hover:text-white dark:border-orange-600 dark:bg-orange-600 dark:hover:bg-orange-700"
         >
-          <ArrowUpIcon />
+          <AlertTriangleIcon className="size-4" />
           Escalated
         </Button>
       </Hint>
@@ -50,9 +57,10 @@ export const ConversationStatusButton = ({
         disabled={disabled}
         onClick={onClick}
         size="sm"
-        variant="destructive"
+        variant="outline"
+        className="border-amber-500 bg-amber-500 text-white hover:bg-amber-600 hover:text-white dark:border-amber-600 dark:bg-amber-600 dark:hover:bg-amber-700"
       >
-        <ArrowRightIcon />
+        <MailQuestionIcon className="size-4" />
         Unresolved
       </Button>
     </Hint>

@@ -7,7 +7,7 @@ import { api } from "@workspace/backend/_generated/api";
 import { Id } from "@workspace/backend/_generated/dataModel";
 import { Button } from "@workspace/ui/components/button";
 import { useAction, useMutation, useQuery } from "convex/react";
-import { MoreHorizontalIcon, Wand2Icon } from "lucide-react";
+import { MoreVerticalIcon, SparklesIcon, SendIcon } from "lucide-react";
 import {
   AIConversation,
   AIConversationContent,
@@ -142,9 +142,13 @@ export const ConversationIdView = ({
   return (
     <div className="flex h-full flex-col bg-muted">
       <header className="flex items-center justify-between border-b bg-background p-2.5">
-        <Button size="sm" variant="ghost">
-          <MoreHorizontalIcon />
-        </Button>
+        {/* <Button
+          size="sm"
+          variant="ghost"
+          className="hover:bg-teal-50 dark:hover:bg-teal-950/30 hover:text-teal-600 dark:hover:text-teal-400"
+        >
+          <MoreVerticalIcon className="size-4" />
+        </Button> */}
         {!!conversation && (
           <ConversationStatusButton
             onClick={handleToggleStatus}
@@ -163,7 +167,7 @@ export const ConversationIdView = ({
           />
           {toUIMessages(messages.results ?? [])?.map((message) => (
             <AIMessage
-              // In reverse, because we are watching from "assistant" prespective
+              // In reverse, because we are watching from "assistant" perspective
               from={message.role === "user" ? "assistant" : "user"}
               key={message.id}
             >
@@ -174,6 +178,7 @@ export const ConversationIdView = ({
                 <DicebearAvatar
                   seed={conversation?.contactSessionId ?? "user"}
                   size={32}
+                  className="ring-2 ring-transparent transition-all duration-200 hover:ring-teal-400 dark:hover:ring-teal-500"
                 />
               )}
             </AIMessage>
@@ -183,7 +188,6 @@ export const ConversationIdView = ({
       </AIConversation>
 
       <div className="p-2">
-        {/* <Form {...form}> */}
         <AIInput onSubmit={form.handleSubmit(onSubmit)} {...form}>
           <Controller
             control={form.control}
@@ -209,6 +213,7 @@ export const ConversationIdView = ({
                     : "Type your response as an operator..."
                 }
                 value={field.value}
+                className="focus-visible:ring-teal-500"
               />
             )}
           />
@@ -221,8 +226,15 @@ export const ConversationIdView = ({
                   isEnhancing ||
                   !form.formState.isValid
                 }
+                className={cn(
+                  "transition-colors",
+                  !isEnhancing &&
+                    "hover:bg-teal-50 dark:hover:bg-teal-950/30 hover:text-teal-600 dark:hover:text-teal-400",
+                  isEnhancing &&
+                    "bg-teal-100 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400",
+                )}
               >
-                <Wand2Icon />
+                <SparklesIcon className="size-4" />
                 {isEnhancing ? "Enhancing..." : "Enhance"}
               </AIInputButton>
             </AIInputTools>
@@ -235,10 +247,12 @@ export const ConversationIdView = ({
               }
               status="ready"
               type="submit"
-            />
+              className="bg-teal-500 hover:bg-teal-600 text-white disabled:bg-teal-300 dark:disabled:bg-teal-800"
+            >
+              <SendIcon className="size-4" />
+            </AIInputSubmit>
           </AIInputToolbar>
         </AIInput>
-        {/* </Form> */}
       </div>
     </div>
   );
@@ -248,9 +262,9 @@ export const ConversationIdViewLoading = () => {
   return (
     <div className="flex h-full flex-col bg-muted">
       <header className="flex items-center justify-between border-b bg-background p-2.5">
-        <Button disabled size="sm" variant="ghost">
-          <MoreHorizontalIcon />
-        </Button>
+        {/* <Button disabled size="sm" variant="ghost">
+          <MoreVerticalIcon className="size-4" />
+        </Button> */}
       </header>
       <AIConversation className="max-h-[calc(100vh-180px)]">
         <AIConversationContent>
@@ -268,9 +282,9 @@ export const ConversationIdViewLoading = () => {
                 key={index}
               >
                 <Skeleton
-                  className={`h-9 ${width} rounded-lg bg-neutral-200`}
+                  className={`h-9 ${width} rounded-lg bg-teal-100 dark:bg-teal-900/30`}
                 />
-                <Skeleton className="size-8 rounded-full bg-neutral-200" />
+                <Skeleton className="size-8 rounded-full bg-teal-100 dark:bg-teal-900/30" />
               </div>
             );
           })}
@@ -282,10 +296,15 @@ export const ConversationIdViewLoading = () => {
           <AIInputTextarea
             disabled
             placeholder="Type your response as an operator..."
+            className="focus-visible:ring-teal-500"
           />
           <AIInputToolbar>
             <AIInputTools />
-            <AIInputSubmit disabled status="ready" />
+            <AIInputSubmit
+              disabled
+              status="ready"
+              className="bg-teal-300 dark:bg-teal-800"
+            />
           </AIInputToolbar>
         </AIInput>
       </div>

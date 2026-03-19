@@ -2,12 +2,15 @@
 
 import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 import {
-  CreditCardIcon,
-  InboxIcon,
-  LayoutDashboardIcon,
-  LibraryBigIcon,
+  MessageSquareIcon,
+  BookOpenIcon,
+  BrushIcon,
+  PuzzleIcon,
   Mic,
-  PaletteIcon,
+  CreditCardIcon,
+  UsersIcon,
+  SettingsIcon,
+  HeadphonesIcon,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -31,12 +34,17 @@ const customerSupportItems = [
   {
     title: "Conversations",
     url: "/conversations",
-    icon: InboxIcon,
+    icon: MessageSquareIcon, // Changed from InboxIcon
   },
   {
     title: "Knowledge Base",
     url: "/files",
-    icon: LibraryBigIcon,
+    icon: BookOpenIcon, // Changed from LibraryBigIcon
+  },
+  {
+    title: "Support Teams",
+    url: "/teams",
+    icon: UsersIcon, // New item with teal theme
   },
 ];
 
@@ -44,17 +52,22 @@ const configurationItems = [
   {
     title: "Widget Customization",
     url: "/customization",
-    icon: PaletteIcon,
+    icon: BrushIcon, // Changed from PaletteIcon
   },
   {
     title: "Integrations",
     url: "/integrations",
-    icon: LayoutDashboardIcon,
+    icon: PuzzleIcon, // Changed from LayoutDashboardIcon
   },
   {
     title: "Voice Assistant",
     url: "/plugins/vapi",
-    icon: Mic,
+    icon: Mic, // Kept Mic
+  },
+  {
+    title: "Settings",
+    url: "/settings",
+    icon: SettingsIcon, // New item with teal theme
   },
 ];
 
@@ -62,7 +75,7 @@ const accountItems = [
   {
     title: "Plans & Billing",
     url: "/billing",
-    icon: CreditCardIcon,
+    icon: CreditCardIcon, // Kept CreditCardIcon
   },
 ];
 
@@ -73,7 +86,6 @@ export const DashboardSidebar = () => {
     if (url === "/") {
       return pathname === "/";
     }
-
     return pathname.startsWith(url);
   };
 
@@ -119,7 +131,7 @@ export const DashboardSidebar = () => {
                     isActive={isActive(item.url)}
                     className={cn(
                       isActive(item.url) &&
-                        "bg-gradient-to-b from-sidebar-primary to-[#0b63f3]! text-sidebar-primary-foreground! hover:to-[#0b63f3]/90!",
+                        "bg-gradient-to-b from-teal-500 to-teal-600! text-white! hover:to-teal-600/90!",
                     )}
                   >
                     <Link href={item.url}>
@@ -145,7 +157,7 @@ export const DashboardSidebar = () => {
                     isActive={isActive(item.url)}
                     className={cn(
                       isActive(item.url) &&
-                        "bg-gradient-to-b from-sidebar-primary to-[#0b63f3]! text-sidebar-primary-foreground! hover:to-[#0b63f3]/90!",
+                        "bg-gradient-to-b from-teal-500 to-teal-600! text-white! hover:to-teal-600/90!",
                     )}
                   >
                     <Link href={item.url}>
@@ -160,7 +172,7 @@ export const DashboardSidebar = () => {
         </SidebarGroup>
 
         {/* Account */}
-        {/* <SidebarGroup>
+        <SidebarGroup>
           <SidebarGroupLabel>Account</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -171,7 +183,7 @@ export const DashboardSidebar = () => {
                     isActive={isActive(item.url)}
                     className={cn(
                       isActive(item.url) &&
-                        "bg-gradient-to-b from-sidebar-primary to-[#0b63f3]! text-sidebar-primary-foreground! hover:to-[#0b63f3]/90!",
+                        "bg-gradient-to-b from-teal-500 to-teal-600! text-white! hover:to-teal-600/90!",
                     )}
                   >
                     <Link href={item.url}>
@@ -183,8 +195,9 @@ export const DashboardSidebar = () => {
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
-        </SidebarGroup> */}
+        </SidebarGroup>
       </SidebarContent>
+
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -194,7 +207,7 @@ export const DashboardSidebar = () => {
                 elements: {
                   rootBox: "w-full! h-8!",
                   userButtonTrigger:
-                    "w-full! p-2! hover:bg-sidebar-accent! hover:text-sidebar-accent-foreground! group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2!",
+                    "w-full! p-2! hover:bg-teal-50! dark:hover:bg-teal-950/30! group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2!",
                   userButtonBox:
                     "w-full! flex-row-reverse! justify-end! gap-2! group-data-[collapsible=icon]:justify-center! text-sidebar-foreground!",
                   userButtonOuterIdentifier:
