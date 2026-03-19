@@ -17,7 +17,10 @@ import {
   CornerUpLeftIcon,
   ListIcon,
 } from "lucide-react";
-import { getCountriesFromTimezone } from "@/lib/country-utils";
+import {
+  getCountriesFromTimezone,
+  getCountryFlagUrl,
+} from "@/lib/country-utils";
 import Link from "next/link";
 import { cn } from "@workspace/ui/lib/utils";
 import { usePathname } from "next/navigation";
@@ -114,7 +117,9 @@ export const ConversationsPanel = () => {
                 conversation.contactSession.metadata?.timezone,
               );
 
-              const countryFlagUrl = "/logo.svg";
+              const countryFlagUrl = country?.code
+                ? getCountryFlagUrl(country.code)
+                : undefined;
 
               return (
                 <Link
