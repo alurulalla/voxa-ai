@@ -66,14 +66,15 @@ export const WidgetChatScreen = () => {
           contactSessionId,
         }
       : "skip",
-    { initialNumItems: 10 },
+    { initialNumItems: 5 },
   );
 
   const { topElementRef, handleLoadMore, canLoadMore, isLoadingMore } =
     useInfiniteScroll({
       status: messages.status,
       loadMore: messages.loadMore,
-      loadSize: 10,
+      loadSize: 5,
+      observerEnabled: false,
     });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -99,7 +100,7 @@ export const WidgetChatScreen = () => {
 
   const onBack = () => {
     setConversationId(null);
-    setScreen("selection");
+    setScreen("inbox");
   };
   return (
     <>
@@ -107,8 +108,8 @@ export const WidgetChatScreen = () => {
         <div className="flex items-center gap-x-2">
           <Button size="icon" variant="transparent" onClick={onBack}>
             <ArrowLeftIcon />
-            <p>Chat</p>
           </Button>
+          <p>Chat</p>
         </div>
         <Button size="icon" variant="transparent">
           <MenuIcon />
