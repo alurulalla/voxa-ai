@@ -218,7 +218,9 @@ export const ConversationIdView = ({
             )}
           />
           <AIInputToolbar>
-            <AIInputTools>
+            <AIInputTools>{/* Other tools if any */}</AIInputTools>
+
+            <div className="flex items-center gap-1">
               <AIInputButton
                 onClick={handleEnhanceResponse}
                 disabled={
@@ -237,20 +239,18 @@ export const ConversationIdView = ({
                 <SparklesIcon className="size-4" />
                 {isEnhancing ? "Enhancing..." : "Enhance"}
               </AIInputButton>
-            </AIInputTools>
-            <AIInputSubmit
-              disabled={
-                conversation?.status === "resolved" ||
-                !form.formState.isValid ||
-                form.formState.isSubmitting ||
-                isEnhancing
-              }
-              status="ready"
-              type="submit"
-              className="bg-teal-500 hover:bg-teal-600 text-white disabled:bg-teal-300 dark:disabled:bg-teal-800"
-            >
-              <SendIcon className="size-4" />
-            </AIInputSubmit>
+
+              <AIInputSubmit
+                disabled={
+                  conversation?.status === "resolved" ||
+                  !form.formState.isValid ||
+                  form.formState.isSubmitting ||
+                  isEnhancing
+                }
+                status="ready"
+                type="submit"
+              />
+            </div>
           </AIInputToolbar>
         </AIInput>
       </div>

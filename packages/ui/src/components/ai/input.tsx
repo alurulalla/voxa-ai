@@ -1,6 +1,12 @@
 "use client";
 
-import { Loader2Icon, SendIcon, SquareIcon, XIcon } from "lucide-react";
+import {
+  Loader2Icon,
+  SendIcon,
+  SquareIcon,
+  XIcon,
+  SparklesIcon,
+} from "lucide-react";
 import type {
   ComponentProps,
   HTMLAttributes,
@@ -79,6 +85,7 @@ export const AIInput = ({ className, ...props }: AIInputProps) => (
   <form
     className={cn(
       "w-full divide-y overflow-hidden rounded-md border bg-background",
+      "focus-within:border-teal-500 focus-within:ring-1 focus-within:ring-teal-500 dark:focus-within:border-teal-400 dark:focus-within:ring-teal-400",
       className,
     )}
     {...props}
@@ -119,7 +126,7 @@ export const AIInputTextarea = ({
         "text-sm!",
         "w-full resize-none rounded-none border-none p-3 shadow-none outline-none ring-0",
         "bg-transparent dark:bg-transparent",
-        "focus-visible:ring-0",
+        "focus-visible:ring-0 placeholder:text-muted-foreground/70",
         className,
       )}
       name="message"
@@ -142,7 +149,10 @@ export const AIInputToolbar = ({
   ...props
 }: AIInputToolbarProps) => (
   <div
-    className={cn("flex items-center justify-between p-1", className)}
+    className={cn(
+      "flex items-center justify-between p-1 bg-muted/30",
+      className,
+    )}
     {...props}
   />
 );
@@ -166,16 +176,17 @@ export const AIInputButton = ({
   variant = "ghost",
   className,
   size,
+  children,
   ...props
 }: AIInputButtonProps) => {
-  const newSize =
-    (size ?? Children.count(props.children) > 1) ? "default" : "icon";
+  const newSize = (size ?? Children.count(children) > 1) ? "default" : "icon";
 
   return (
     <Button
       className={cn(
-        "shrink-0 gap-1.5 rounded-lg",
-        variant === "ghost" && "text-muted-foreground",
+        "shrink-0 gap-1.5 rounded-lg transition-all",
+        variant === "ghost" &&
+          "text-muted-foreground hover:text-teal-600 dark:hover:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-950/30",
         newSize === "default" && "px-3",
         className,
       )}
@@ -183,7 +194,9 @@ export const AIInputButton = ({
       type="button"
       variant={variant}
       {...props}
-    />
+    >
+      {children}
+    </Button>
   );
 };
 
@@ -199,19 +212,29 @@ export const AIInputSubmit = ({
   children,
   ...props
 }: AIInputSubmitProps) => {
-  let Icon = <SendIcon />;
+  let Icon = <SendIcon className="size-4" />;
+  let statusClasses = "";
 
   if (status === "submitted") {
-    Icon = <Loader2Icon className="animate-spin" />;
+    Icon = <Loader2Icon className="size-4 animate-spin" />;
   } else if (status === "streaming") {
-    Icon = <SquareIcon />;
+    Icon = <SquareIcon className="size-4" />;
   } else if (status === "error") {
-    Icon = <XIcon />;
+    Icon = <XIcon className="size-4" />;
+    statusClasses = "bg-destructive hover:bg-destructive/90";
   }
+
+  const defaultClasses =
+    "bg-teal-500 hover:bg-teal-600 text-white disabled:bg-teal-300 dark:disabled:bg-teal-800";
 
   return (
     <Button
-      className={cn("gap-1.5 rounded-md rounded-br-lg", className)}
+      className={cn(
+        "gap-1.5 rounded-md rounded-br-lg",
+        !statusClasses && defaultClasses,
+        statusClasses,
+        className,
+      )}
       size={size}
       type="submit"
       variant={variant}
@@ -222,6 +245,7 @@ export const AIInputSubmit = ({
   );
 };
 
+// Model Select Components
 export type AIInputModelSelectProps = ComponentProps<typeof Select>;
 
 export const AIInputModelSelect = (props: AIInputModelSelectProps) => (
@@ -239,7 +263,8 @@ export const AIInputModelSelectTrigger = ({
   <SelectTrigger
     className={cn(
       "border-none bg-transparent font-medium text-muted-foreground shadow-none transition-colors",
-      'hover:bg-accent hover:text-foreground [&[aria-expanded="true"]]:bg-accent [&[aria-expanded="true"]]:text-foreground',
+      "hover:bg-teal-50 dark:hover:bg-teal-950/30 hover:text-teal-600 dark:hover:text-teal-400",
+      "data-[state=open]:bg-teal-50 dark:data-[state=open]:bg-teal-950/30 data-[state=open]:text-teal-600 dark:data-[state=open]:text-teal-400",
       className,
     )}
     {...props}
@@ -254,7 +279,10 @@ export const AIInputModelSelectContent = ({
   className,
   ...props
 }: AIInputModelSelectContentProps) => (
-  <SelectContent className={cn(className)} {...props} />
+  <SelectContent
+    className={cn("border-teal-200 dark:border-teal-800", className)}
+    {...props}
+  />
 );
 
 export type AIInputModelSelectItemProps = ComponentProps<typeof SelectItem>;
@@ -263,7 +291,13 @@ export const AIInputModelSelectItem = ({
   className,
   ...props
 }: AIInputModelSelectItemProps) => (
-  <SelectItem className={cn(className)} {...props} />
+  <SelectItem
+    className={cn(
+      "focus:bg-teal-50 dark:focus:bg-teal-950/30 focus:text-teal-600 dark:focus:text-teal-400",
+      className,
+    )}
+    {...props}
+  />
 );
 
 export type AIInputModelSelectValueProps = ComponentProps<typeof SelectValue>;
