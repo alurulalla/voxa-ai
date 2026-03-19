@@ -115,7 +115,6 @@ export const ConversationIdView = ({
 
     let newStatus: "unresolved" | "resolved" | "escalated";
 
-    // Cycle through states: unresolved -> escalated -> resolved -> unresolved
     if (conversation.status === "unresolved") {
       newStatus = "escalated";
     } else if (conversation.status === "escalated") {

@@ -118,7 +118,6 @@ export const create = mutation({
 
     await saveMessage(ctx, components.agent, {
       threadId: conversation.threadId,
-      // TODO: Check if "agentName" is needed or not
       agentName: identity.familyName,
       message: {
         role: "assistant",
